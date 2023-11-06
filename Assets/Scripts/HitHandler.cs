@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class HitHandler : MonoBehaviour
 {
@@ -10,10 +11,6 @@ public class HitHandler : MonoBehaviour
 	
     private void OnCollisionEnter(Collision other)
     {
-        // Destroy(gameObject);
-
-        // var go = Instantiate(_initialObject, _position);
-        // go.SetActive(true);
-        Instantiate(Resources.Load("CubeBase"));
+	    Destroy(other.gameObject);
     }
 }

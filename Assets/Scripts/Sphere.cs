@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Sphere : MonoBehaviour
 {
-    public int _points;
+    [SerializeField] private float _timeToDestroy;
+    [SerializeField] private int _points;
 
     public int Points => _points;
 
@@ -14,6 +15,15 @@ public class Sphere : MonoBehaviour
         if (other.gameObject.GetComponent<Pinguin>() != null)
         {
             gameObject.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        _timeToDestroy -= Time.deltaTime;
+        if (_timeToDestroy <= 0.0f)
+        {
+            Destroy(gameObject);
         }
     }
 }

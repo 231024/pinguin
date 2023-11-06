@@ -6,8 +6,9 @@ using UnityEngine;
 public class Pinguin : MonoBehaviour
 {
     private int _collectedPoints;
-    public float _speed;
-    public float _rotationSpeed;
+    
+    [SerializeField] private float _speed;
+    [SerializeField] private float _rotationSpeed;
     
     private void OnCollisionEnter(Collision other)
     {
@@ -23,27 +24,20 @@ public class Pinguin : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            var tmp = transform.localPosition;
-            tmp.z += _speed * Time.deltaTime;
-            transform.localPosition = tmp;
+            transform.Translate(Vector3.forward * (_speed * Time.deltaTime));
         }
         if (Input.GetKey(KeyCode.S))
         {
-            var tmp = transform.localPosition;
-            tmp.z -= _speed * Time.deltaTime;
-            transform.localPosition = tmp;
+            transform.Translate(Vector3.back * (_speed * Time.deltaTime));
         }
         if (Input.GetKey(KeyCode.A))
         {
-            Quaternion tmp = transform.localRotation;
-            tmp.y -= _rotationSpeed * Time.deltaTime;
-            transform.localRotation = tmp;
+            transform.Rotate(Vector3.up, -90.0f * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            Quaternion tmp = transform.localRotation;
-            tmp.y += _rotationSpeed * Time.deltaTime;
-            transform.localRotation = tmp;
+            transform.Rotate(Vector3.up, 90.0f * Time.deltaTime);
+
         }
     }
 }

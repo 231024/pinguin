@@ -1,21 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SphereMaker : MonoBehaviour
 {
-    public GameObject _initialSphere;
-    public Transform _position;
+    [SerializeField] private GameObject[] _initialSpheres;
+    [SerializeField] private Transform[] _positions;
+    [SerializeField] private Vector2 _periodRange;
 
-    public float _period;
+    private float _period;
 
     void Update()
     {
-        _period = _period - Time.deltaTime;
+        _period -= Time.deltaTime;
         if (_period <= 0.0f)
         {
-            _period = 1.0f;
-            Instantiate(_initialSphere, _position.localPosition, _position.localRotation).SetActive(true);
+            _period = Random.Range(_periodRange.x, _periodRange.y);
+            var sphere = _initialSpheres[Random.Range(0, _initialSpheres.Length)];
+            var pos = _positions[Random.Range(0, _positions.Length)];
+            Instantiate(sphere, pos.localPosition, pos.localRotation).SetActive(true);
         }
     }
 }
