@@ -12,15 +12,26 @@ public class SphereMaker : MonoBehaviour
 
     private float _period;
 
-    void Update()
+    private void OnDestroy()
     {
-        _period -= Time.deltaTime;
-        if (_period <= 0.0f)
-        {
-            _period = Random.Range(_periodRange.x, _periodRange.y);
-            var sphere = _initialSpheres[Random.Range(0, _initialSpheres.Length)];
-            var pos = _positions[Random.Range(0, _positions.Length)];
-            Instantiate(sphere, pos.localPosition, pos.localRotation).SetActive(true);
-        }
+        CancelInvoke();
+    }
+
+    private void MakeSphere()
+    {
+        var sphere = _initialSpheres[Random.Range(0, _initialSpheres.Length)];
+        var pos = _positions[Random.Range(0, _positions.Length)];
+        Instantiate(sphere, pos.localPosition, pos.localRotation).SetActive(true);
+        Invoke("MakeSphere", Random.Range(_periodRange.x, _periodRange.y));
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        Invoke("MakeSphere", Random.Range(_periodRange.x, _periodRange.y));
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        CancelInvoke();
     }
 }

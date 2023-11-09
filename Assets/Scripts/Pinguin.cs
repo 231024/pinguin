@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Pinguin : MonoBehaviour
@@ -8,7 +9,11 @@ public class Pinguin : MonoBehaviour
     private int _collectedPoints;
     
     [SerializeField] private float _speed;
-    [SerializeField] private float _rotationSpeed;
+    [SerializeField] private float _dashSpeed;
+    [SerializeField] private float _jumpForce;
+    [SerializeField] private Rigidbody _body;
+
+    private bool _isGrounded;
     
     private void OnCollisionEnter(Collision other)
     {
@@ -18,26 +23,42 @@ public class Pinguin : MonoBehaviour
             _collectedPoints = _collectedPoints + collisionSphere.Points;
             Debug.Log($"I'm a pinguin and have {_collectedPoints} points");
         }
+
+        _isGrounded = true;
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        _isGrounded = false;
     }
 
     private void Update()
     {
         if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(Vector3.forward * (_speed * Time.deltaTime));
+            _body.AddRelativeForce(Vector3.forward * _speed, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            transform.Translate(Vector3.back * (_speed * Time.deltaTime));
+            _body.AddRelativeForce(Vector3.back * _speed, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.up, -90.0f * Time.deltaTime);
+            _body.AddTorque(Vector3.down * _speed);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(Vector3.up, 90.0f * Time.deltaTime);
+            _body.AddTorque(Vector3.up * _speed);
+        }
 
+        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        {
+            _body.AddForce(Vector3.up * _jumpForce);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _body.AddRelativeForce(Vector3.forward * _dashSpeed, ForceMode.Impulse);
         }
     }
 }
