@@ -7,11 +7,14 @@ using UnityEngine;
 public class Pinguin : MonoBehaviour
 {
     private int _collectedPoints;
-    
+
+    public int CollectedPoints => _collectedPoints;
+
     [SerializeField] private float _speed;
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _jumpForce;
     [SerializeField] private Rigidbody _body;
+    [SerializeField] private GameObject _target;
 
     private bool _isGrounded;
     
@@ -20,8 +23,7 @@ public class Pinguin : MonoBehaviour
         Sphere collisionSphere = other.gameObject.GetComponent<Sphere>();
         if (collisionSphere != null)
         {
-            _collectedPoints = _collectedPoints + collisionSphere.Points;
-            Debug.Log($"I'm a pinguin and have {_collectedPoints} points");
+            _collectedPoints += collisionSphere.Points;
         }
 
         _isGrounded = true;
@@ -36,11 +38,11 @@ public class Pinguin : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            _body.AddRelativeForce(Vector3.forward * _speed, ForceMode.Acceleration);
+            _body.AddRelativeForce(Vector3.forward * _speed);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            _body.AddRelativeForce(Vector3.back * _speed, ForceMode.Acceleration);
+            _body.AddRelativeForce(Vector3.back * _speed);
         }
         if (Input.GetKey(KeyCode.A))
         {

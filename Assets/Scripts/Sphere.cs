@@ -12,9 +12,9 @@ public class Sphere : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.GetComponent<Pinguin>() != null)
+        if (other.gameObject.GetComponent<Pinguin>() != null || other.gameObject.GetComponent<Chicken>() != null)
         {
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 
