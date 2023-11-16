@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Pinguin : MonoBehaviour
 {
@@ -36,23 +37,15 @@ public class Pinguin : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.W))
+        RaycastHit hitInfo = new RaycastHit();
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
         {
-            _body.AddRelativeForce(Vector3.forward * _speed);
+            Debug.Log(hitInfo.collider.name);
         }
-        if (Input.GetKey(KeyCode.S))
-        {
-            _body.AddRelativeForce(Vector3.back * _speed);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            _body.AddTorque(Vector3.down * _speed);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            _body.AddTorque(Vector3.up * _speed);
-        }
-
+        
+        _body.AddRelativeForce(new Vector3(0.0f, 0.0f, Input.GetAxis("Vertical")) * _speed);
+        _body.AddTorque(new Vector3(0.0f, Input.GetAxis("Horizontal"), 0.0f) * _speed);
+        
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             _body.AddForce(Vector3.up * _jumpForce);
