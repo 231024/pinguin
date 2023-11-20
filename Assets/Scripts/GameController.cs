@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour
 	[SerializeField] private float _roundTime;
 
 	[Header("UI")] [SerializeField] private TMP_Text _playerPointsText;
-
 	[SerializeField] private TMP_Text _timerText;
 	[SerializeField] private TMP_Text _playerResultText;
 	[SerializeField] private TMP_Text _chickenResultText;
@@ -23,9 +22,7 @@ public class GameController : MonoBehaviour
 
 		if (_roundTime <= 0.0f)
 		{
-			_playerResultText.SetText(_pinguin.CollectedPoints.ToString());
-			_chickenResultText.SetText(_chicken.CollectedPoints.ToString());
-			_gameOverPanel.SetActive(true);
+			ShowResultScreen();
 			return;
 		}
 
@@ -33,12 +30,18 @@ public class GameController : MonoBehaviour
 
 		if (_pinguin.CollectedPoints >= _pointsCount || _chicken.CollectedPoints >= _pointsCount)
 		{
-			_playerResultText.SetText(_pinguin.CollectedPoints.ToString());
-			_chickenResultText.SetText(_chicken.CollectedPoints.ToString());
-			_gameOverPanel.SetActive(true);
+			ShowResultScreen();
+			return;
 		}
 
 		_playerPointsText.SetText(_pinguin.CollectedPoints.ToString());
+	}
+
+	private void ShowResultScreen()
+	{
+		_playerResultText.SetText(_pinguin.CollectedPoints.ToString());
+		_chickenResultText.SetText(_chicken.CollectedPoints.ToString());
+		_gameOverPanel.SetActive(true);
 	}
 
 	public void OnStartNewGameClick()

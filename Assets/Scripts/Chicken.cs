@@ -24,6 +24,7 @@ public class Chicken : MonoBehaviour
 			return;
 		}
 
+		transform.LookAt(_target);
 		_agent.SetDestination(_target.position);
 	}
 
