@@ -20,15 +20,16 @@ public class GameController : MonoBehaviour
 	private void Update()
 	{
 		_roundTime -= Time.deltaTime;
-		_timerText.SetText($"{_roundTime:00.0}");
-		_playerPointsText.SetText(_pinguin.CollectedPoints.ToString());
 
 		if (_roundTime <= 0.0f)
 		{
 			_playerResultText.SetText(_pinguin.CollectedPoints.ToString());
 			_chickenResultText.SetText(_chicken.CollectedPoints.ToString());
 			_gameOverPanel.SetActive(true);
+			return;
 		}
+
+		_timerText.SetText($"{_roundTime:00.0}");
 
 		if (_pinguin.CollectedPoints >= _pointsCount || _chicken.CollectedPoints >= _pointsCount)
 		{
@@ -36,6 +37,8 @@ public class GameController : MonoBehaviour
 			_chickenResultText.SetText(_chicken.CollectedPoints.ToString());
 			_gameOverPanel.SetActive(true);
 		}
+
+		_playerPointsText.SetText(_pinguin.CollectedPoints.ToString());
 	}
 
 	public void OnStartNewGameClick()

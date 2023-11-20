@@ -19,6 +19,11 @@ public class Chicken : MonoBehaviour
 
 	private void Update()
 	{
+		if (_target == null)
+		{
+			return;
+		}
+
 		_agent.SetDestination(_target.position);
 	}
 
