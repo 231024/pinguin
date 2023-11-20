@@ -1,21 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Chicken : MonoBehaviour
 {
+	private const string WayPointTag = "WayPoint";
 	[SerializeField] private NavMeshAgent _agent;
 	[SerializeField] private Transform[] _wayPoints;
 
 	private int _currentWayPointIndex;
-	private int _collectedPoints;
 	private Transform _target;
 
-	public int CollectedPoints => _collectedPoints;
-
-	private const string WayPointTag = "WayPoint";
+	public int CollectedPoints { get; private set; }
 
 	private void Start()
 	{
@@ -27,12 +22,13 @@ public class Chicken : MonoBehaviour
 		_agent.SetDestination(_target.position);
 	}
 
-	private void OnTriggerExit(Collider other)
+	private void OnCollisionEnter(Collision other)
 	{
-		if (other.gameObject.GetComponentInParent<Sphere>() != null)
+		var collisionSphere = other.gameObject.GetComponent<Sphere>();
+		if (collisionSphere != null)
 		{
-			Debug.Log("Sphere was lost");
 			_target = _wayPoints[_currentWayPointIndex].transform;
+			CollectedPoints += collisionSphere.Points;
 		}
 	}
 
@@ -43,10 +39,19 @@ public class Chicken : MonoBehaviour
 			IncrementWayPoint();
 			_target = _wayPoints[_currentWayPointIndex].transform;
 		}
-		
+
 		if (other.gameObject.GetComponentInParent<Sphere>() != null)
 		{
 			_target = other.gameObject.transform.parent;
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (other.gameObject.GetComponentInParent<Sphere>() != null)
+		{
+			Debug.Log("Sphere was lost");
+			_target = _wayPoints[_currentWayPointIndex].transform;
 		}
 	}
 
@@ -56,16 +61,6 @@ public class Chicken : MonoBehaviour
 		if (_currentWayPointIndex >= _wayPoints.Length)
 		{
 			_currentWayPointIndex = 0;
-		}
-	}
-	
-	private void OnCollisionEnter(Collision other)
-	{
-		Sphere collisionSphere = other.gameObject.GetComponent<Sphere>();
-		if (collisionSphere != null)
-		{
-			_target = _wayPoints[_currentWayPointIndex].transform;
-			_collectedPoints += collisionSphere.Points;
 		}
 	}
 }
