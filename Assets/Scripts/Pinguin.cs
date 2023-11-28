@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Pinguin : MonoBehaviour
 {
@@ -8,31 +9,33 @@ public class Pinguin : MonoBehaviour
 	[SerializeField] private float _jumpForce;
 	[SerializeField] private Rigidbody _body;
 
+	private DefaultInputActions _controls;
+
 	public int CollectedPoints { get; private set; }
+
+	private void Awake()
+	{
+		_controls = new DefaultInputActions();
+		_controls.Player.Enable();
+	}
 
 	private void Update()
 	{
-		// var hitInfo = new RaycastHit();
-		// if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-		// {
-		// 	Debug.Log(hitInfo.collider.name);
-		// }
-
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Mouse.current.leftButton.wasPressedThisFrame)
 		{
-			_body.AddForce(Vector3.up * _jumpForce);
-		}
-
-		if (Input.GetKeyDown(KeyCode.LeftShift))
-		{
-			_body.AddRelativeForce(Vector3.forward * _dashSpeed, ForceMode.Impulse);
+			var hitInfo = new RaycastHit();
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out hitInfo))
+			{
+				Debug.Log(hitInfo.collider.name);
+			}
 		}
 	}
 
 	private void FixedUpdate()
 	{
-		_body.AddRelativeForce(new Vector3(0.0f, 0.0f, Input.GetAxis("Vertical")) * _movementSpeed, ForceMode.VelocityChange);
-		_body.AddTorque(new Vector3(0.0f, Input.GetAxis("Horizontal"), 0.0f) * _rotationSpeed);
+		var move = _controls.Player.Move.ReadValue<Vector2>();
+		_body.AddRelativeForce(new Vector3(0.0f, 0.0f, move.y) * _movementSpeed, ForceMode.VelocityChange);
+		_body.AddTorque(new Vector3(0.0f, move.x, 0.0f) * _rotationSpeed);
 	}
 
 	private void OnCollisionEnter(Collision other)
@@ -41,6 +44,14 @@ public class Pinguin : MonoBehaviour
 		if (collisionSphere != null)
 		{
 			CollectedPoints += collisionSphere.Points;
+		}
+	}
+
+	public void Jump(InputAction.CallbackContext context)
+	{
+		if (context.performed)
+		{
+			_body.AddForce(Vector3.up * _jumpForce);
 		}
 	}
 }
